@@ -47,7 +47,6 @@ class TestMixupCrossEntropy:
     def criterion(self) -> MixupCrossentropy:
         return MixupCrossentropy()
 
-    @pytest.mark.integtest
     def test_forward(
         self,
         criterion: nn.Module,

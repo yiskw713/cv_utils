@@ -10,12 +10,15 @@ Please see [`this repository`](https://github.com/yiskw713/pytorch_template) for
 * pytest
 * pytest-mock
 * pre-commit (for pre-commit formatting, type check and testing)
+* opencv
+* opencv-contrib-python = 3.x
 
 Please run `pip install -r requirements.txt` to install the necessary packages.
 
 ## List
 
 * mixup
+* Motion History Image
 
 ## License
 

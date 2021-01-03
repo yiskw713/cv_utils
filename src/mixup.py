@@ -73,3 +73,23 @@ class MixupCrossentropy(nn.Module):
         loss += (1 - lamb) * self.criterion(preds, labels2)
 
         return loss
+
+
+if __name__ == "__main__":
+    from torchvision.models import resnet18
+
+    model = resnet18()
+
+    # set up data
+    data = torch.zeros((2, 3, 224, 224)).float()
+    data[0] = 1.0
+    labels = torch.tensor([0, 1]).long()
+
+    criterion = MixupCrossentropy()
+
+    # forward
+    mixed_data, labels1, labels2, lamb = mixup(data, labels)
+    outputs = model(mixed_data)
+    loss = criterion(outputs, labels1, labels2, lamb)
+
+    print(loss)
