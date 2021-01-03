@@ -1,5 +1,6 @@
 .ipynb_checkpoints
 .python-version
+.pytest_cache
 .vscode
 dataset/flowers
 *.png
