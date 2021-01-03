@@ -14,6 +14,14 @@ import numpy as np
 
 @dataclasses.dataclass
 class MotionHistoryImageProcessor(object):
+    """Calculate motion history image proposed in James W.
+
+    Davis and Aaron F. Bobick
+    'The Representation and Recognition of Action Using Temporal Templates'
+    in CVPR 1997
+    http://alumni.media.mit.edu/~jdavis/Publications/publications_402.pdf
+    """
+
     # how long the motion is kept
     duration: int = 30
 

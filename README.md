@@ -23,3 +23,8 @@ Please run `pip install -r requirements.txt` to install the necessary packages.
 ## License
 
 This repository is released under the [MIT License](./LICENSE)
+
+## Reference
+
+* James W. Davis and Aaron F. Bobick "The Representation and Recognition of Action Using Temporal Templates" in CVPR 1997
+* H. Zhang+ "mixup: BEYOND EMPIRICAL RISK MINIMIZATION" in ICLR2018
