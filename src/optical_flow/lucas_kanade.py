@@ -1,7 +1,8 @@
-import cv2
-import numpy as np
 import dataclasses
 from typing import Tuple
+
+import cv2
+import numpy as np
 
 
 @dataclasses.dataclass
@@ -59,7 +60,10 @@ class LucasKanadeOpticalFlow(object):
         return prev_feature_positions, cur_feature_positions
 
     def _draw_optical_flow_line(
-        self, frame:np.ndarray, prev_feature_positions: np.ndarray, cur_feature_positions: np.ndarray
+        self,
+        frame: np.ndarray,
+        prev_feature_positions: np.ndarray,
+        cur_feature_positions: np.ndarray,
     ) -> None:
         # visualize optical flow
         for i, (cur_point, prev_point) in enumerate(
@@ -113,7 +117,9 @@ class LucasKanadeOpticalFlow(object):
                 prev_gray, cur_gray, prev_feature_positions
             )
 
-            frame = self._draw_optical_flow_line(frame, prev_feature_positions, cur_feature_positions)
+            frame = self._draw_optical_flow_line(
+                frame, prev_feature_positions, cur_feature_positions
+            )
 
             frame = cv2.add(frame, self.flow_mask)
 
