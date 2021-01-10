@@ -4,7 +4,7 @@ import dataclasses
 from typing import Tuple
 
 
-@dataclasses.dataclass(frozen=True)
+@dataclasses.dataclass
 class LucasKanadeOpticalFlow(object):
     """Calculate Lucas-Kanade optical flow
     reference:
@@ -26,15 +26,72 @@ class LucasKanadeOpticalFlow(object):
         0.03,
     )
 
+    def _setup_demo(self, height: int, width: int) -> None:
+        # create radom colors for visualization
+        self.colors = np.random.randint(0, 255, (self.max_corners, 3))
+
+        # image for visualization
+        self.flow_mask = np.zeros((height, width, 3), np.uint8)
+
+    def _calc_optical_flow(
+        self,
+        prev_gray: np.ndarray,
+        cur_gray: np.ndarray,
+        prev_feature_positions: np.ndarray,
+    ) -> Tuple[np.ndarray, np.ndarray]:
+
+        # feature_next -> new position of input features.
+        # status -> whether the corresponding features has been found or not.
+        cur_feature_positions, status, _ = cv2.calcOpticalFlowPyrLK(
+            prev_gray,
+            cur_gray,
+            prev_feature_positions,
+            None,
+            winSize=self.window_size,
+            maxLevel=self.max_level,
+            criteria=self.criteria,
+        )
+
+        if cur_feature_positions is not None:
+            prev_feature_positions = prev_feature_positions[status == 1]
+            cur_feature_positions = cur_feature_positions[status == 1]
+
+        return prev_feature_positions, cur_feature_positions
+
+    def _draw_optical_flow_line(
+        self, frame:np.ndarray, prev_feature_positions: np.ndarray, cur_feature_positions: np.ndarray
+    ) -> None:
+        # visualize optical flow
+        for i, (cur_point, prev_point) in enumerate(
+            zip(cur_feature_positions, prev_feature_positions)
+        ):
+            # get coordianate
+            prev_x, prev_y = prev_point.ravel()
+            cur_x, cur_y = cur_point.ravel()
+
+            # line between first_point and cur_point
+            cv2.line(
+                self.flow_mask,
+                (cur_x, cur_y),
+                (prev_x, prev_y),
+                self.colors[i].tolist(),
+                2,
+            )
+
+            cv2.circle(frame, (cur_x, cur_y), 5, self.colors[i].tolist(), -1)
+
+        return frame
+
     def demo(self) -> None:
         cap = cv2.VideoCapture(0)
-        # 最初のフレーム読み込み
-        first_flag, first = cap.read()
+        ret, frame = cap.read()
+        H, W, _ = frame.shape
 
-        # グレースケールに変換
-        gray_first = cv2.cvtColor(first, cv2.COLOR_BGR2GRAY)
-        feature_first = cv2.goodFeaturesToTrack(
-            gray_first,
+        prev_gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+
+        # corner detection
+        prev_feature_positions = cv2.goodFeaturesToTrack(
+            prev_gray,
             mask=None,
             maxCorners=self.max_corners,
             qualityLevel=self.quality_level,
@@ -42,77 +99,33 @@ class LucasKanadeOpticalFlow(object):
             blockSize=self.block_size,
         )
 
-        # create radom colors for visualization
-        colors = np.random.randint(0, 255, (self.max_corners, 3))
-
-        # フロー書き出し用の画像作成
-        flow_mask = np.zeros_like(first)
+        self._setup_demo(H, W)
 
         while True:
-            # 動画のフレーム取得
             ret, frame = cap.read()
 
-            # 動画のフレームが無くなったら強制終了
             if not ret:
                 break
 
-            # グレースケールに変換
-            gray_next = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+            cur_gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
 
-            # オプティカルフロー検出
-            # feature_next : gray_nextの特徴点の座標を保持
-            feature_next, status, err = cv2.calcOpticalFlowPyrLK(
-                gray_first,
-                gray_next,
-                feature_first,
-                None,
-                winSize=self.window_size,
-                maxLevel=self.max_level,
-                criteria=self.criteria,
+            prev_feature_positions, cur_feature_positions = self._calc_optical_flow(
+                prev_gray, cur_gray, prev_feature_positions
             )
 
-            # 特徴点の移動を検出できた場合
-            if feature_next is not None:
-                # オプティカルフローを検出した特徴点を選別（0：検出せず、1：検出した）
-                good_first = feature_first[status == 1]
-                good_next = feature_next[status == 1]
+            frame = self._draw_optical_flow_line(frame, prev_feature_positions, cur_feature_positions)
 
-            # オプティカルフローを描画
-            for i, (next_point, first_point) in enumerate(zip(good_next, good_first)):
+            frame = cv2.add(frame, self.flow_mask)
 
-                # 前フレームの座標獲得
-                first_x, first_y = first_point.ravel()
+            cv2.imshow("result", frame)
 
-                # 後フレームの座標獲得
-                next_x, next_y = next_point.ravel()
-
-                # 前フレームと後フレームを繋ぐ線を描画
-                flow_mask = cv2.line(
-                    flow_mask,
-                    (next_x, next_y),
-                    (first_x, first_y),
-                    colors[i].tolist(),
-                    2,
-                )
-
-                # 現在の特徴点のところに丸（大きな点）を描画
-                frame = cv2.circle(frame, (next_x, next_y), 5, colors[i].tolist(), -1)
-
-            output = cv2.add(frame, flow_mask)
-
-            # ウィンドウに結果を表示
-            cv2.imshow("window", output)
-
-            # 終了オプション
             k = cv2.waitKey(1)
             if k == ord("q"):
                 break
 
-            # 次のフレーム、ポイントの準備
-            gray_first = gray_next.copy()
-            feature_first = good_next.reshape(-1, 1, 2)
+            prev_gray = cur_gray.copy()
+            prev_feature_positions = cur_feature_positions.reshape(-1, 1, 2)
 
-        # 終了処理
         cv2.destroyAllWindows()
         cap.release()
 

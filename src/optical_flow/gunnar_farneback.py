@@ -3,11 +3,6 @@ import numpy as np
 import dataclasses
 from typing import List
 
-"""Calculate Gunnar Farneback optical flow
-    reference:
-    http://labs.eecs.tottori-u.ac.jp/sd/Member/oyamada/OpenCV/html/py_tutorials/py_video/py_lucas_kanade/py_lucas_kanade.html
-"""
-
 
 @dataclasses.dataclass
 class GunnarFarnebackOpticalFlow(object):
@@ -76,12 +71,18 @@ class GunnarFarnebackOpticalFlow(object):
 
         rgb_flow = cv2.cvtColor(hsv_flow, cv2.COLOR_HSV2BGR)
         return rgb_flow
-    
-    def _save_optical_flow(self, flow:np.ndarray, timestamp:int, save_dir:str) -> None:
+
+    def _save_optical_flow(
+        self, flow: np.ndarray, timestamp: int, save_dir: str
+    ) -> None:
         save_path = os.path.join(save_dir, f"flow_{timestamp:05}.npy")
         np.save(save_path, flow)
-    
-    def get_optical_flow(self, frames: List[np.ndarray], save_dir:str,)->None:
+
+    def process(
+        self,
+        frames: List[np.ndarray],
+        save_dir: str,
+    ) -> None:
         # TODO:　動画のフレーム数と一致させるにはどうする？
         prev_frame = frames[0].copy()
         n_frames = len(frames)
