@@ -1,4 +1,5 @@
 import dataclasses
+import os
 from typing import List
 
 import cv2
@@ -59,8 +60,8 @@ class GunnarFarnebackOpticalFlow(object):
         Return:
             rgb_flow: colorized optical flow (H, W, 3)
         """
-        H, W, _ = flow.shape
-        hsv_flow = np.zeros((H, W, 3), np.uint8)
+        h, w, _ = flow.shape
+        hsv_flow = np.zeros((h, w, 3), np.uint8)
         hsv_flow[..., 1] = 255
 
         # convert 2D array to magnitude and angular
@@ -85,15 +86,19 @@ class GunnarFarnebackOpticalFlow(object):
         save_dir: str,
     ) -> None:
         # TODO:　動画のフレーム数と一致させるにはどうする？
-        prev_frame = frames[0].copy()
+        prev_frame = frames[0]
+        prev_frame = cv2.cvtColor(prev_frame, cv2.COLOR_BGR2GRAY)
         n_frames = len(frames)
 
         for timestamp in range(self.interval, n_frames, self.interval):
             cur_frame = frames[timestamp]
+            cur_frame = cv2.cvtColor(cur_frame, cv2.COLOR_BGR2GRAY)
 
             flow = self._calc_optical_flow(prev_frame, cur_frame)
 
             self._save_optical_flow(flow, timestamp, save_dir)
+
+            prev_frame = cur_frame.copy()
 
     def demo(self) -> None:
         cap = cv2.VideoCapture(0)
@@ -101,7 +106,7 @@ class GunnarFarnebackOpticalFlow(object):
         ret, frame = cap.read()
         prev_frame = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
 
-        while True:
+        while cap.isOpened():
             ret, frame = cap.read()
             cur_frame = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
 
