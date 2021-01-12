@@ -1,7 +1,7 @@
+import dataclasses
+
 import cv2
 import numpy as np
-import time
-import dataclasses
 
 
 @dataclasses.dataclass
@@ -11,7 +11,7 @@ class InterframeDifferenceProcessor(object):
     def _update_background(self, gray_frame: np.ndarray) -> None:
         self.background = gray_frame.copy()
 
-    def _calc_interframe_difference(self, target_gray: np.ndarray) -> None:
+    def _calc_interframe_difference(self, target_gray: np.ndarray) -> np.ndarray:
         # calculate difference
         mask = cv2.absdiff(target_gray, self.background)
 
@@ -33,7 +33,7 @@ class InterframeDifferenceProcessor(object):
 
             mask = self._calc_interframe_difference(gray)
 
-            # フレームとマスク画像を表示
+            # visualization
             cv2.imshow("frame", frame)
             cv2.imshow("mask", mask)
 

@@ -21,7 +21,7 @@ class LucasKanadeOpticalFlow(object):
     # parameters for Lucas-Kanade optical flow
     window_size: Tuple[int, int] = (15, 15)
     max_level: int = 2
-    criteria: Tuple[int, int, int] = (
+    criteria: Tuple[int, int, float] = (
         cv2.TERM_CRITERIA_EPS | cv2.TERM_CRITERIA_COUNT,
         10,
         0.03,
@@ -64,7 +64,7 @@ class LucasKanadeOpticalFlow(object):
         frame: np.ndarray,
         prev_feature_positions: np.ndarray,
         cur_feature_positions: np.ndarray,
-    ) -> None:
+    ) -> np.ndarray:
         # visualize optical flow
         for i, (cur_point, prev_point) in enumerate(
             zip(cur_feature_positions, prev_feature_positions)
@@ -89,7 +89,7 @@ class LucasKanadeOpticalFlow(object):
     def demo(self) -> None:
         cap = cv2.VideoCapture(0)
         ret, frame = cap.read()
-        H, W, _ = frame.shape
+        h, w, _ = frame.shape
 
         prev_gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
 
@@ -103,13 +103,10 @@ class LucasKanadeOpticalFlow(object):
             blockSize=self.block_size,
         )
 
-        self._setup_demo(H, W)
+        self._setup_demo(h, w)
 
-        while True:
+        while cap.isOpened():
             ret, frame = cap.read()
-
-            if not ret:
-                break
 
             cur_gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
 

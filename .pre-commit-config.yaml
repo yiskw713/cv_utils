@@ -1,6 +1,6 @@
 repos:
 - repo: https://github.com/pre-commit/pre-commit-hooks
-  rev: v3.3.0
+  rev: v3.4.0
   hooks:
   - id: check-added-large-files
     args: [--maxkb=5000]
@@ -21,7 +21,7 @@ repos:
     args: [--autofix]
 
 - repo: https://gitlab.com/pycqa/flake8
-  rev: 3.8.1
+  rev: 3.8.4
   hooks:
   - id: flake8
     # max-line-length setting is the same as black
@@ -43,27 +43,27 @@ repos:
       additional_dependencies: [tokenize-rt==3.2.0]
 
 - repo: https://github.com/psf/black
-  rev: stable
+  rev: 20.8b1
   hooks:
   - id: black
     language_version: python3
 
 - repo: https://github.com/pycqa/isort
-  rev: 5.5.2
+  rev: 5.7.0
   hooks:
     - id: isort
       args: ["--settings-path=pyproject.toml"]
 
 # for docstrings in python codes
 - repo: https://github.com/myint/docformatter
-  rev: master
+  rev: v1.4
   hooks:
     - id: docformatter
       args: [--in-place]
 
 # for markdown
 - repo: https://github.com/markdownlint/markdownlint
-  rev: master  # or specific git tag
+  rev: v0.11.0  # or specific git tag
   hooks:
     - id: markdownlint
       # ignore line length of makrdownlint

@@ -1,7 +1,8 @@
+import dataclasses
+from typing import ClassVar, Tuple
+
 import cv2
 import numpy as np
-import dataclasses
-from typing import Tuple, ClassVar
 
 
 @dataclasses.dataclass
@@ -11,12 +12,11 @@ class BackgrounSubtractor(object):
     kernel_size: Tuple[int, int] = (3, 3)
 
     subtraction_type: str = "MOG"
-    subtraction_candidates: ClassVar[Tuple[str]] = (
+    subtraction_candidates: ClassVar[Tuple[str, ...]] = (
         "CNT",
         "GMG",
         "GSOC",
         "LSBP",
-        "LSBPDesc",
         "MOG",
     )
 
@@ -35,7 +35,7 @@ class BackgrounSubtractor(object):
         # instantiation
         return subtractor_class()
 
-    def _remove_noise(self, mask: np.ndarray) -> None:
+    def _remove_noise(self, mask: np.ndarray) -> np.ndarray:
         mask = cv2.morphologyEx(mask, cv2.MORPH_OPEN, self.kernel)
         return mask
 
