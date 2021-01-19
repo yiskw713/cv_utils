@@ -70,8 +70,8 @@ class LucasKanadeOpticalFlow(object):
             zip(cur_feature_positions, prev_feature_positions)
         ):
             # get coordianate
-            prev_x, prev_y = prev_point.ravel()
-            cur_x, cur_y = cur_point.ravel()
+            prev_x, prev_y = map(int, prev_point.ravel())
+            cur_x, cur_y = map(int, cur_point.ravel())
 
             # line between first_point and cur_point
             cv2.line(

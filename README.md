@@ -23,12 +23,14 @@ Please run `poetry install` to install the necessary packages.
 * optical flow
   * Lucas-Kanade
   * Gunnar Farneback
+  * Dual TVL1 (NOTE: This is implemented by opencv and takes a lot of time)
 
 ## TODO
 
 * [ ] While pytest runs without any errors using poetry,
   it fails in github actions though dependencies are installed with poetry as well.
   This may be caused by `opencv-python` or `opencv-contrib-python`.
+* [ ] use GPUs for calculating Dual TVL1 optical flow
 
 ## License
 
