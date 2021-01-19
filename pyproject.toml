@@ -5,3 +5,33 @@ include_trailing_comma = true
 line_length = 88
 multi_line_output = 3
 use_parentheses = true
+
+[tool.poetry]
+authors = ["yiskw713 <i.yuchi713@gmail.com>"]
+description = ""
+license = "MIT"
+name = "cv_utils"
+version = "0.1.0"
+
+[tool.poetry.dependencies]
+Pillow = "^8.1.0"
+numpy = "^1.19.5"
+python = "^3.8"
+torch = "^1.7.1"
+torchvision = "^0.8.2"
+opencv-python = "^4.5.1"
+opencv-contrib-python = "^4.5.1"
+
+[tool.poetry.dev-dependencies]
+black = "^20.8b1"
+flake8 = "^3.8.4"
+isort = "^5.7.0"
+mypy = "^0.790"
+pre-commit = "^2.9.3"
+pytest = "^6.2.1"
+pytest-cov = "^2.11.0"
+pytest-mock = "^3.5.1"
+
+[build-system]
+build-backend = "poetry.core.masonry.api"
+requires = ["poetry-core>=1.0.0"]

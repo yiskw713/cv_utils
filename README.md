@@ -5,7 +5,8 @@ Please see [`this repository`](https://github.com/yiskw713/pytorch_template) for
 
 ## Requirements
 
-* python >= 3.7
+* poetry
+* python >= 3.8
 * pytorch >= 1.0
 * pytest
 * pytest-mock
@@ -13,15 +14,21 @@ Please see [`this repository`](https://github.com/yiskw713/pytorch_template) for
 * opencv
 * opencv-contrib-python = 3.x
 
-Please run `pip install -r requirements.txt` to install the necessary packages.
+Please run `poetry install` to install the necessary packages.
 
 ## List
 
 * mixup
 * Motion History Image
 * optical flow
-    * Lucas-Kanade
-    * Gunnar Farneback
+  * Lucas-Kanade
+  * Gunnar Farneback
+
+## TODO
+
+* [ ] While pytest runs without any errors using poetry,
+  it fails in github actions though dependencies are installed with poetry as well.
+  This may be caused by `opencv-python` or `opencv-contrib-python`.
 
 ## License
 
