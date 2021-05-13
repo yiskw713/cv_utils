@@ -77,7 +77,7 @@ class OtsuThreshold(object):
 
         Herein, we use inter-class variance as `separation`
         """
-        max_separation = 0
+        max_separation = 0.0
         max_separation_th = 0
 
         for th in range(256):
@@ -87,12 +87,12 @@ class OtsuThreshold(object):
 
             # calculating the average values of pixels each class.
             if n1 == 0:
-                mean1 = 0
+                mean1 = 0.0
             else:
                 mean1 = sum([i * hist[i] for i in range(th)]) / n1
 
             if n2 == 0:
-                mean2 = 0
+                mean2 = 0.0
             else:
                 mean2 = sum([i * hist[i] for i in range(th, 256)]) / n2
 
