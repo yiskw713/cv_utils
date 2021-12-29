@@ -16,3 +16,4 @@ wandb_result
 .coverage*
 !imgs/*.png
 !imgs/*.jpg
+.venv
