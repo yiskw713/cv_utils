@@ -24,6 +24,8 @@ Please run `poetry install` to install the necessary packages.
   * Lucas-Kanade
   * Gunnar Farneback
   * Dual TVL1 (NOTE: This is implemented by opencv and takes a lot of time)
+* Image Scrambling
+* Bounding box selector (for annotation)
 
 ## TODO
 
